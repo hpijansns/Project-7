@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donate for a Cause</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('https://i.ibb.co/48m8Lk1/your-image.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+        .header {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .container h2 {
+            color: #333;
+        }
+        .container input, .container button {
+            width: 80%;
+            max-width: 400px;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        .container input {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .container button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .container button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>Help Us Make a Difference</h1>
+</div>
+
+<div class="container">
+    <h2>Donate Now</h2>
+    <p>Your contribution can save lives. Minimum donation is ₹50.</p>
+    <form id="donation-form" onsubmit="sendPaymentRequest(event)">
+        <input type="text" id="donor-name" placeholder="Your Name (Optional)" />
+        <input type="number" id="donation-amount" placeholder="Enter Amount (₹)" required />
+        <button type="submit">Donate via UPI</button>
+    </form>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    function sendPaymentRequest(event) {
+        event.preventDefault();
+        const name = document.getElementById("donor-name").value || "Anonymous";
+        const amount = document.getElementById("donation-amount").value;
+        
+        if (amount < 50) {
+            alert("The minimum donation amount is ₹50. Please enter a valid amount.");
+            return;
+        }
+
+        const options = {
+            "key": "rzp_live_elxzEEFkwxBLHR", // Razorpay API Key
+            "amount": amount * 100, // Amount in paise
+            "currency": "INR",
+            "name": "Donate for a Cause",
+            "description": "Donation Payment",
+            "handler": function (response) {
+                alert(`Thank you for your donation! Payment ID: ${response.razorpay_payment_id}`);
+            },
+            "prefill": {
+                "name": name,
+                "email": "example@example.com", // Static email for now
+                "contact": "9876543210" // Static contact number for now
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+        
+        const rzp = new Razorpay(options);
+        rzp.open();
+    }
+</script>
+
+</body>
+</html>
